@@ -11,7 +11,6 @@ const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
 
-  // Tách logic tính toán underline ra để tái sử dụng
   const updateUnderline = useCallback(() => {
     if (!containerRef.current) return;
     const buttons = containerRef.current.querySelectorAll("button");
@@ -29,12 +28,10 @@ const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
     }
   }, [selectedFilter]);
 
-  // Cập nhật khi selectedFilter thay đổi
   useEffect(() => {
     updateUnderline();
   }, [selectedFilter, updateUnderline]);
 
-  // Cập nhật khi resize
   useEffect(() => {
     window.addEventListener("resize", updateUnderline);
     return () => window.removeEventListener("resize", updateUnderline);

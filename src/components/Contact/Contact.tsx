@@ -38,7 +38,7 @@ const Contact = () => {
       >
         {/* Text content */}
         <div className="md:w-1/2 w-full">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-snug mt-20 mb-6">
             I'm available for <br />
             full time opportunities
           </h2>
