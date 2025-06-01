@@ -58,7 +58,7 @@ const Header = () => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <ul className="md:hidden px-6 pb-4 space-y-4 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300">
+        <ul className="md:hidden px-6 pb-4 mt-4 space-y-4 bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300">
           {navLinks.map((item) => (
             <li key={item.id}>
               <ScrollLink

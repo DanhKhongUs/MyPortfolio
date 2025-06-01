@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 type FilterType = {
   selectedFilter: string;
@@ -11,7 +11,8 @@ const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
 
-  useEffect(() => {
+  // Tách logic tính toán underline ra để tái sử dụng
+  const updateUnderline = useCallback(() => {
     if (!containerRef.current) return;
     const buttons = containerRef.current.querySelectorAll("button");
     const activeBtn = Array.from(buttons).find(
@@ -27,6 +28,17 @@ const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
       });
     }
   }, [selectedFilter]);
+
+  // Cập nhật khi selectedFilter thay đổi
+  useEffect(() => {
+    updateUnderline();
+  }, [selectedFilter, updateUnderline]);
+
+  // Cập nhật khi resize
+  useEffect(() => {
+    window.addEventListener("resize", updateUnderline);
+    return () => window.removeEventListener("resize", updateUnderline);
+  }, [updateUnderline]);
 
   return (
     <div

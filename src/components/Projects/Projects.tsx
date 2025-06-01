@@ -19,7 +19,7 @@ const Projects = () => {
 
   return (
     <section id="projects">
-      <div className="py-16 mt-10 animate-fadeIn animation-delay-2">
+      <div className="relative pt-24 pb-24 md:pt-28 bg-cover bg-center">
         <h2 className="relative text-3xl font-bold mt-6 md:mt-0 md:text-4xl text-center text-gray-800">
           Projects
           <hr className="w-12 border-t-4 border-teal-600 rounded mt-2 mx-auto" />
