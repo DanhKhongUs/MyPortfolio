@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 
 const App = () => {
   return (
-    <Router>
+    <Router basename="/MyPortfolio/">
       <Routes>
         <Route path={routes.home} element={<HomePage />} />
       </Routes>
