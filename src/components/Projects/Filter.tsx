@@ -1,59 +1,61 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import useDebounce from "~/hooks/useDebounce";
 
-type FilterType = {
+interface FilterType {
   selectedFilter: string;
   setSelectedFilter: (value: string) => void;
-};
+}
 
-const filters = ["All", "Web Development", "Challenges", "Scripts"];
+const lists = ["All", "Web Development", "Challenges", "Scripts"];
 
 const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [lineStyle, setLineStyle] = useState({ width: 0, left: 0 });
 
-  const updateUnderline = useCallback(() => {
-    if (!containerRef.current) return;
-    const buttons = containerRef.current.querySelectorAll("button");
+  const updateLine = useCallback(() => {
+    if (!wrapRef.current) return;
+    const buttons = wrapRef.current.querySelectorAll("button");
     const activeBtn = Array.from(buttons).find(
       (btn) => btn.dataset.filter === selectedFilter
     );
 
     if (activeBtn) {
       const rect = activeBtn.getBoundingClientRect();
-      const containerRect = containerRef.current.getBoundingClientRect();
-      setUnderlineStyle({
+      const wrapRect = wrapRef.current.getBoundingClientRect();
+      setLineStyle({
         width: rect.width,
-        left: rect.left - containerRect.left,
+        left: rect.left - wrapRect.left,
       });
     }
   }, [selectedFilter]);
 
   useEffect(() => {
-    updateUnderline();
-  }, [selectedFilter, updateUnderline]);
+    updateLine();
+  }, [selectedFilter, updateLine]);
 
+  const { debounced } = useDebounce(updateLine, 1000);
   useEffect(() => {
-    window.addEventListener("resize", updateUnderline);
-    return () => window.removeEventListener("resize", updateUnderline);
-  }, [updateUnderline]);
+    const handleResize = () => debounced();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [debounced]);
 
   return (
     <div
-      ref={containerRef}
+      ref={wrapRef}
       className="relative flex gap-4 sm:gap-8 mt-10 mx-auto justify-center pb-2 border-b border-gray-300"
     >
-      {filters.map((filter) => (
+      {lists.map((list) => (
         <button
-          key={filter}
-          data-filter={filter}
+          key={list}
           className={`relative z-10 px-2 py-2 text-sm sm:text-base transition-colors duration-200 cursor-pointer ${
-            selectedFilter === filter
+            selectedFilter === list
               ? "text-teal-700 font-bold"
               : "text-gray-500 hover:text-teal-600"
           }`}
-          onClick={() => setSelectedFilter(filter)}
+          onClick={() => setSelectedFilter(list)}
         >
-          {filter}
+          {list}
         </button>
       ))}
 
@@ -61,8 +63,8 @@ const Filter = ({ selectedFilter, setSelectedFilter }: FilterType) => {
       <span
         className="absolute bottom-0 left-0 h-[3px] bg-teal-600 rounded transition-all duration-300 ease-in-out"
         style={{
-          width: `${underlineStyle.width}px`,
-          transform: `translateX(${underlineStyle.left}px)`,
+          width: `${lineStyle.width}px`,
+          transform: `translateX(${lineStyle.left}px)`,
         }}
       />
     </div>
